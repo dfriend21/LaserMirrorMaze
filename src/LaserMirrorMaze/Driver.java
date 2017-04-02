@@ -49,13 +49,16 @@ public class Driver {
 			if(keepGoing == false){
 				System.out.println("Please make a valid selection.\n");
 			}
-		}while(keepGoing == false);
+		} while(keepGoing == false);
 		
+		//select descriptive mode or basic mode
 		do{
+			keepGoing = true;
 			System.out.println("Enter 'd' for descriptive mode and 'b' for basic mode.");
 			String input = s.next();
 			if(!input.equals("d") && !input.equals("b")){
 				System.out.println("Please make a valid selection.\n");
+				keepGoing = false;
 			} else {
 				if(input.equals("d")){
 					isDescriptiveMode = true;
@@ -63,21 +66,22 @@ public class Driver {
 					isDescriptiveMode = false;
 				}
 			}
-		}while(keepGoing == false);
+		} while(keepGoing == false);
 		fileToUse = fileArray[fileSelectionNum];
 		s.close();
 		
+		//Now we'll read in the data from the file
 		Scanner s2 = null;
 		keepGoing = true;
 		LaserMirrorMaze maze = new LaserMirrorMaze();
 		Laser laser = new Laser();
-		
 		try { 
 			s2 = new Scanner(fileToUse);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		try{
+			//get width-height data
 			if(s2.hasNext()){
 				String widthHeight = s2.next();
 				//make sure its formatted correctly
@@ -96,6 +100,7 @@ public class Driver {
 					throw new InvalidFileFormatException();
 				}
 			}
+			//get mirror data
 			if(s2.hasNext()){
 				String mirrorInfo = s2.next();
 				//read in the info until we reach the next "-1"
@@ -135,9 +140,12 @@ public class Driver {
 					}
 				}
 			}
+			//get laser data
 			if(s2.hasNext()){
 				String laserEntry = s2.next();
+				//make sure it's formatted correctly
 				if(laserEntry.matches("\\d+,\\d+[HV]")){
+					//split the string to get the coordinates and the direction
 					String[] parts = laserEntry.split(",|(?=[HV])");
 					laser.setXY(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]));
 					if(parts[2].equals("H")){
@@ -147,15 +155,19 @@ public class Driver {
 						laser.setIsVertical(true);
 					}
 					laser.setPosNeg(1);
+				} else {
+					System.out.println(laserEntry + ": incorrect format");
+					throw new InvalidFileFormatException();
 				}
 			}
 			
 		} catch(InvalidFileFormatException e) {
-			e.printStackTrace();
+			System.out.println("File was not formatted correctly.");
+			return;
 		}
-		LaserMirrorMazeSimulator sim = new LaserMirrorMazeSimulator(maze, laser);
-		sim.runSim(isDescriptiveMode);
-		
 		s2.close();
+		LaserMirrorMazeSimulator sim = new LaserMirrorMazeSimulator(maze, laser);
+		//run the simulation!
+		sim.runSim(isDescriptiveMode);
 	}
 }

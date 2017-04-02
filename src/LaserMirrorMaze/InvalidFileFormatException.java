@@ -1,5 +1,6 @@
 package LaserMirrorMaze;
 
+//this is a custom exception - we'll use it if the input files aren't properly formatted
 public class InvalidFileFormatException extends Exception{
 
 	private static final long serialVersionUID = 1L;

@@ -15,6 +15,7 @@ public class LaserMirrorMaze {
 		this.width = width;
 	}
 	
+	//makes a representation of the maze in the console
 	public void printMaze(){
 		ArrayList<String> stringArray = new ArrayList<String>(rooms.get(0).size());
 		
@@ -25,18 +26,29 @@ public class LaserMirrorMaze {
 		String lastRow = "  ";
 		for(int i = 0; i < rooms.size() ; i++){
 			//lastRow will list the numbers of the columns (at the bottom of the maze)
-			lastRow += "  " + i + " ";
+			lastRow += "   " + i + " ";
 			for(int j = rooms.get(i).size()-1; j >= 0; j--){
 				
 				String symbol = "";
 				if(rooms.get(i).get(j).hasMirror()){
+					Mirror mirror = rooms.get(i).get(j).getMirror();
+					
 					if(rooms.get(i).get(j).getMirror().getOrientation() == -1){
 						symbol = "\\";
 					} else {
 						symbol = "/";
 					}
+					if(mirror.isTwoWay()){
+						if(mirror.type == 1){
+							symbol = ":" + symbol;
+						} else {
+							symbol = symbol + ":";
+						}
+					}else {
+						symbol = symbol + symbol;
+					}
 				} else {
-					symbol = " ";
+					symbol = "  ";
 				}
 				stringArray.set(j, stringArray.get(j) + "| " + symbol + " ");
 			}
@@ -52,8 +64,8 @@ public class LaserMirrorMaze {
 	}
 	
 	public void setDimensions(int width, int height){
-		this.width = width; // I don't actually need these two - just check array size
-		this.height = height; //
+		this.width = width; 
+		this.height = height; 
 		rooms = new ArrayList<ArrayList<Room>>();
 		for(int i = 0; i<width; i++){
 			rooms.add(i, new ArrayList<Room>());
@@ -74,21 +86,4 @@ public class LaserMirrorMaze {
 	public Room getRoom(int x, int y){
 		return rooms.get(x).get(y);
 	}
-/*
-	public void addMirror(int x, int y, Mirror mirror){
-		rooms.get(x).get(y).addMirror(mirror);
-	}
-	
-	public Mirror getMirror(int x, int y){
-		return rooms.get(x).get(y).getMirror();
-	}
-	
-	public boolean hasMirror(int x, int y){
-		if(rooms.get(x).get(y).getMirror().getOrientation()==0){
-			return false;
-		} else {
-			return true;
-		}
-	}*/
-
 }

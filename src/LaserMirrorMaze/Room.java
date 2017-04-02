@@ -33,6 +33,7 @@ public class Room {
 		return mirror;
 	}
 	
+	//returns a boolean so that we can check if the maze is infinite
 	public boolean addPrevRoom(Point prevRoom){
 		boolean alreadyExists;
 		if(prevRooms.contains(prevRoom)){
@@ -42,13 +43,5 @@ public class Room {
 		}
 		prevRooms.add(prevRoom);
 		return alreadyExists;
-	}
-	
-	public boolean hasPrevRoom(Point prevRoom){
-		if(prevRooms.contains(prevRoom)){
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

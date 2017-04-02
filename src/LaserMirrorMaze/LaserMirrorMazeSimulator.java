@@ -59,9 +59,6 @@ public class LaserMirrorMazeSimulator {
 				laser.setX(laser.getX() + laser.posNeg);
 			}
 			
-			if(maze.getRoom(laser.getX(), laser.getY()).addPrevRoom(new Point(originalX, originalY))){
-				isInfinite = true;
-			}
 			//Check if the laser has escaped yet
 			if(laser.getX() >= maze.getWidth() || laser.getY() >= maze.getHeight() 
 					|| laser.getX() < 0 || laser.getY() < 0){
@@ -75,7 +72,11 @@ public class LaserMirrorMazeSimulator {
 					laser.setX(laser.getX()-laser.getPosNeg());
 				}
 			}
-			
+			//check if it's infinite
+			if(!hasEscaped && maze.getRoom(laser.getX(), laser.getY()).addPrevRoom(new Point(originalX, originalY))){
+				isInfinite = true;
+			}
+			//if we're in descriptive mode we'll print all of this stuff out
 			if(isDescriptiveMode){
 				System.out.println("STEP " + counter);
 				System.out.println("laser starting location: " + originalX + "," + originalY);
@@ -129,6 +130,7 @@ public class LaserMirrorMazeSimulator {
 			}
 			System.out.println("Orientation: " + orientation);
 		}
+		
 		if(isInfinite){
 			System.out.println("This maze has no solution - it's infinite!");
 		}
