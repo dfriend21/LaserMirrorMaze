@@ -57,43 +57,103 @@ public class Driver {
 	public static LaserMirrorMaze readFile(File f){
 		Scanner s = null;
 		boolean keepGoing = true;
+		LaserMirrorMaze maze = new LaserMirrorMaze();
+		Laser laser = new Laser();
 		
 		try { 
 			s = new Scanner(f);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		int width = 0;
-		int height = 0;
 		try{
 			if(s.hasNext()){
 				String widthHeight = s.next();
-				//check if string is in correct format
+				//make sure its formatted correctly
 				if(widthHeight.matches("\\d+,\\d+")){
+					//split the string to get the x and y coordinates
 					String[] parts = widthHeight.split(",");
-					width = Integer.parseInt(parts[0]);
-					height = Integer.parseInt(parts[1]);
+					int width = Integer.parseInt(parts[0]);
+					int height = Integer.parseInt(parts[1]);
+					maze.setDimensions(width, height);
 				} else {
-					throw new InvalidFileFormatException();
+					throw new InvalidFileFormatException(widthHeight + ": incorrect format");
 				}
 			}
 			if(s.hasNext()){
-				if(s.next()!="-1"){
+				if(!s.next().equals("-1")){
 					throw new InvalidFileFormatException();
 				}
 			}
 			if(s.hasNext()){
 				String mirrorInfo = s.next();
-				while(mirrorInfo != "-1"){
-					
+				//read in the info until we reach the next "-1"
+				while(!mirrorInfo.equals("-1")){
+					Mirror mirror = new Mirror();
+					//make sure its formatted correctly
+					if(mirrorInfo.matches("\\d+,\\d+[RL][RL]?")){
+						System.out.println(mirrorInfo + ": Pattern matches!");
+						//split the string into the parts we need and set the appropriate properties
+						String[] parts = mirrorInfo.split(",|(?=[RL][RL]?)");
+						System.out.println("mirror init:");
+						for(String str:parts){
+							System.out.println(str);
+						}
+						if(parts[2].equals("R")){
+							//set orientation to 1 (1 represents R)
+							mirror.setOrientation(1);
+						} else {
+							//set orientation to -1 (-1 represents L)
+							mirror.setOrientation(-1);
+						}
+						if(parts.length > 3){
+							//type refers to whether it's two-way or normal
+							if(parts[3].equals("R")){
+								//set type to 1 (1 represents R)
+								mirror.setType(1);
+							} else {
+								//set type to -1 (-1 represents L)
+								mirror.setType(-1);
+							}
+						} else {
+							//set type to 0 (0 represents a normal mirror)
+							mirror.setType(0);
+						}
+						int x = Integer.parseInt(parts[0]);
+						int y = Integer.parseInt(parts[1]);
+						maze.getRoom(x,y).addMirror(mirror);
+						mirrorInfo = s.next();
+					} else {
+						System.out.println(mirrorInfo + ": incorrect format");
+						throw new InvalidFileFormatException();
+					}
+				}
+			}
+			if(s.hasNext()){
+				String laserEntry = s.next();
+				if(laserEntry.matches("\\d+,\\d+[HV]")){
+					String[] parts = laserEntry.split(",|(?=[HV])");
+					laser.setXY(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]));
+					if(parts[2].equals("H")){
+						laser.setIsVertical(false);
+						
+					} else {
+						laser.setIsVertical(true);
+					}
+					laser.setPosNeg(1);
+					System.out.println("Laser init:");
+					for(String str:parts){
+						System.out.println(str);
+					}
 				}
 			}
 			
 		} catch(InvalidFileFormatException e) {
 			e.printStackTrace();
 		}
-		System.out.println(width);
-		System.out.println(height);
+		maze.printMaze();
+		
+		LaserMirrorMazeSimulator sim = new LaserMirrorMazeSimulator(maze, laser);
+		sim.runSim();
 		
 		
 		s.close();
