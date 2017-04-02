@@ -9,10 +9,12 @@ public class Room {
 	
 	public Room(){
 		mirror = null;
+		prevRooms = new ArrayList<Point>();
 	}
 	
 	public Room(Mirror mirror){
 		this.mirror = mirror;
+		prevRooms = new ArrayList<Point>();
 	}
 	
 	public void addMirror(Mirror mirror){
@@ -31,8 +33,15 @@ public class Room {
 		return mirror;
 	}
 	
-	public void addPrevRoom(Point prevRoom){
+	public boolean addPrevRoom(Point prevRoom){
+		boolean alreadyExists;
+		if(prevRooms.contains(prevRoom)){
+			alreadyExists = true;
+		} else {
+			alreadyExists = false;
+		}
 		prevRooms.add(prevRoom);
+		return alreadyExists;
 	}
 	
 	public boolean hasPrevRoom(Point prevRoom){

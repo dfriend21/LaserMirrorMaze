@@ -16,8 +16,6 @@ public class LaserMirrorMaze {
 	}
 	
 	public void printMaze(){
-		System.out.println("rooms.size(): " + rooms.size());
-		System.out.println("rooms.get(0).size(): " + rooms.get(0).size());
 		ArrayList<String> stringArray = new ArrayList<String>(rooms.get(0).size());
 		
 		//initialize the array
@@ -32,7 +30,6 @@ public class LaserMirrorMaze {
 				
 				String symbol = "";
 				if(rooms.get(i).get(j).hasMirror()){
-					System.out.println(i + "," + j + " " + rooms.get(i).get(j).getMirror().getOrientation());
 					if(rooms.get(i).get(j).getMirror().getOrientation() == -1){
 						symbol = "\\";
 					} else {
