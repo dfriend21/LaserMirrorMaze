@@ -22,7 +22,6 @@ public class Laser {
 		location = new Point(x,y);
 	}
 	
-
 	public void setX(int x){
 		location.setLocation(x ,location.y);
 	}
@@ -46,9 +45,11 @@ public class Laser {
 	public int getPosNeg(){
 		return posNeg;
 	}
+	
 	public boolean isVertical(){
 		return isVertical;
 	}
+	
 	public void setPosNeg(int num){
 		posNeg = num;
 	}

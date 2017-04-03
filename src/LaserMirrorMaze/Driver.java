@@ -7,6 +7,10 @@ import java.util.Scanner;
 public class Driver {
 	
 	public static void main(String[] Args){
+		System.out.println("-----------------------------------------------");
+		System.out.println("Welcome to Laser Maze Solver!");
+		System.out.println("-----------------------------------------------");
+		
 		File folder = new File("src");
 		File[] fileArray = folder.listFiles();
 		File fileToUse;
@@ -14,8 +18,6 @@ public class Driver {
 		
 		boolean keepGoing = true;
 		boolean isDescriptiveMode = false;
-		
-		System.out.println("Welcome to Laser Maze Solver!");
 		System.out.println("Please select from the following files (found in the 'src' folder of this project):");
 		//list files
 		if(fileArray.length != 0){
@@ -148,23 +150,33 @@ public class Driver {
 					//split the string to get the coordinates and the direction
 					String[] parts = laserEntry.split(",|(?=[HV])");
 					laser.setXY(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]));
+					laser.setPosNeg(1);
+					//set the isVertical property of the laser
+					//also check to see what direction the laser needs to start in
 					if(parts[2].equals("H")){
 						laser.setIsVertical(false);
+						//this assumes that the laser will always enter through the sides...
+						//which was in the specifications so that seems like a reasonable thing to assume
+						if(laser.getX() != 0){
+							laser.setPosNeg(-1);
+						}
 						
 					} else {
 						laser.setIsVertical(true);
+						if(laser.getY() != 0){
+							laser.setPosNeg(-1);
+						}
 					}
-					laser.setPosNeg(1);
 				} else {
 					System.out.println(laserEntry + ": incorrect format");
 					throw new InvalidFileFormatException();
 				}
 			}
 			
-		} catch(InvalidFileFormatException e) {
+		} catch(InvalidFileFormatException|IndexOutOfBoundsException e) {
 			System.out.println("File was not formatted correctly.");
 			return;
-		}
+		} 
 		s2.close();
 		LaserMirrorMazeSimulator sim = new LaserMirrorMazeSimulator(maze, laser);
 		//run the simulation!

@@ -38,7 +38,7 @@ public class LaserMirrorMaze {
 					} else {
 						symbol = "/";
 					}
-					if(mirror.isTwoWay()){
+					if(mirror.isOneWay()){
 						if(mirror.type == 1){
 							symbol = ":" + symbol;
 						} else {

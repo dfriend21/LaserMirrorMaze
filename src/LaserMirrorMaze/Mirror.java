@@ -27,7 +27,7 @@ public class Mirror {
 		return type;
 	}
 	
-	public boolean isTwoWay(){
+	public boolean isOneWay(){
 		if(type!=0){
 			return true;
 		} else {

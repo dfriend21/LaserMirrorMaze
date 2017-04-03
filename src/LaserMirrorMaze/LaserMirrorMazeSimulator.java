@@ -39,9 +39,9 @@ public class LaserMirrorMazeSimulator {
 			if(maze.getRoom(laser.getX(), laser.getY()).hasMirror()){
 				Mirror mirror = maze.getRoom(laser.getX(), laser.getY()).getMirror();
 				
-				boolean twoWayReflectVertical = mirror.isTwoWay() && (laser.isVertical() && mirror.getType() * mirror.getOrientation() == laser.getPosNeg());
-				boolean twoWayReflectHorizontal = mirror.isTwoWay() && (!laser.isVertical() && mirror.getType() * -1 == laser.getPosNeg());
-				if(!mirror.isTwoWay()
+				boolean twoWayReflectVertical = mirror.isOneWay() && (laser.isVertical() && mirror.getType() * mirror.getOrientation() == laser.getPosNeg());
+				boolean twoWayReflectHorizontal = mirror.isOneWay() && (!laser.isVertical() && mirror.getType() * -1 == laser.getPosNeg());
+				if(!mirror.isOneWay()
 						|| twoWayReflectVertical
 						|| twoWayReflectHorizontal){
 					// if it hits a mirror, it will always change directions; it will go from 
@@ -93,19 +93,19 @@ public class LaserMirrorMazeSimulator {
 					if(mirror.getOrientation() == -1){
 						mirrorOrientation = "L";
 					}
-					if(mirror.isTwoWay()){
+					if(mirror.isOneWay()){
 						String mirrorType = "R";
 						if(mirror.getType() == -1){
 							mirrorType = "L";
 						}
-						System.out.println("mirror is two-way: " + mirrorOrientation + mirrorType);
+						System.out.println("mirror is one-way: " + mirrorOrientation + mirrorType);
 						if(startedVertical != laser.isVertical()){
 							System.out.println("laser reflects");
 						} else {
 							System.out.println("laser passes through");
 						}
 					} else {
-						System.out.println("mirror is one-way: " + mirrorOrientation);
+						System.out.println("mirror is two-way: " + mirrorOrientation);
 						System.out.println("laser reflects");
 					}
 				}
